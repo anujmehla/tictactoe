@@ -8,12 +8,19 @@
     </head>
     <body>
         <h1>Tic Tac Toe</h1>
+        <div class="toggle-container">
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle" />
+                <span class="slider"></span>
+            </label>
+            <span>Dark Mode</span>
+        </div>
         <div class="game-container">
             <div id="board">
-                <!-- cells will be created dynamically by js -->
+                <!-- The cells will be created dynamically using JavaScript -->
             </div>
         </div>
-        <div id="status"></div>
+        <p id="status"></p>
         <button id="restart">Restart Game</button>
         <script src="script.js"></script>
     </body>

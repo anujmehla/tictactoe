@@ -1,6 +1,7 @@
 const board = document.getElementById('board');
 const statusText = document.getElementById('status');
 const restartBtn = document.getElementById('restart');
+const darkModeToggle = document.getElementById('darkModeToggle');
 
 let gameState = ['', '', '', '', '', '', '', '', ''];
 let currentPlayer = 'X';
@@ -172,6 +173,11 @@ restartBtn.addEventListener('click', () => {
     gameActive = true;
     statusText.textContent = `Player ${currentPlayer}'s turn`;
     createBoard();
+});
+
+// Toggle dark mode
+darkModeToggle.addEventListener('change', () => {
+    document.body.classList.toggle('dark-mode', darkModeToggle.checked);
 });
 
 // Initialize game

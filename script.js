@@ -68,61 +68,89 @@ function makeMove(index, player) {
     cell.classList.add('taken');
 }
 
-// AI move logic
+// AI move logic with Minimax
 function aiMove() {
-    // Find the best available move
-    const availableMoves = gameState
+    const bestMove = minimax(gameState, 'O').index;
+    makeMove(bestMove, 'O');
+
+    if (checkWinner()) {
+        statusText.textContent = `Player O (AI) wins!`;
+        gameActive = false;
+        return;
+    }
+
+    if (gameState.every((cell) => cell !== '')) {
+        statusText.textContent = "It's a draw!";
+        gameActive = false;
+        return;
+    }
+
+    currentPlayer = 'X';
+    statusText.textContent = `Player ${currentPlayer}'s turn`;
+}
+
+// Minimax Algorithm
+function minimax(state, player) {
+    const availableMoves = state
         .map((cell, index) => (cell === '' ? index : null))
         .filter((index) => index !== null);
 
-    let move;
+    // Check for terminal states
+    if (checkWinnerForPlayer(state, 'X')) return { score: -10 };
+    if (checkWinnerForPlayer(state, 'O')) return { score: 10 };
+    if (availableMoves.length === 0) return { score: 0 };
 
-    // Simple strategy: Try to win, block, or pick randomly
-    move =
-        findWinningMove('O') ||
-        findWinningMove('X') ||
-        pickRandomMove(availableMoves);
+    const moves = [];
 
-    if (move !== null) {
-        makeMove(move, 'O');
-        if (checkWinner()) {
-            statusText.textContent = `Player O (AI) wins!`;
-            gameActive = false;
-            return;
+    // Loop through available moves
+    for (let i = 0; i < availableMoves.length; i++) {
+        const move = {};
+        move.index = availableMoves[i];
+        state[availableMoves[i]] = player;
+
+        if (player === 'O') {
+            const result = minimax(state, 'X');
+            move.score = result.score;
+        } else {
+            const result = minimax(state, 'O');
+            move.score = result.score;
         }
 
-        if (gameState.every((cell) => cell !== '')) {
-            statusText.textContent = "It's a draw!";
-            gameActive = false;
-            return;
-        }
-
-        currentPlayer = 'X';
-        statusText.textContent = `Player ${currentPlayer}'s turn`;
+        state[availableMoves[i]] = ''; // Undo move
+        moves.push(move);
     }
+
+    // Choose the best move
+    let bestMove;
+    if (player === 'O') {
+        let bestScore = -Infinity;
+        for (let i = 0; i < moves.length; i++) {
+            if (moves[i].score > bestScore) {
+                bestScore = moves[i].score;
+                bestMove = moves[i];
+            }
+        }
+    } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < moves.length; i++) {
+            if (moves[i].score < bestScore) {
+                bestScore = moves[i].score;
+                bestMove = moves[i];
+            }
+        }
+    }
+
+    return bestMove;
 }
 
-// Check for a winning move
-function findWinningMove(player) {
-    for (let combination of WINNING_COMBINATIONS) {
+// Check for a winner in a given state
+function checkWinnerForPlayer(state, player) {
+    return WINNING_COMBINATIONS.some((combination) => {
         const [a, b, c] = combination;
-        const values = [gameState[a], gameState[b], gameState[c]];
-
-        if (
-            values.filter((value) => value === player).length === 2 &&
-            values.includes('')
-        ) {
-            return combination[values.indexOf('')];
-        }
-    }
-    return null;
-}
-
-// Pick a random move from available moves
-function pickRandomMove(availableMoves) {
-    return availableMoves.length > 0
-        ? availableMoves[Math.floor(Math.random() * availableMoves.length)]
-        : null;
+        return (
+            state[a] === player && state[b] === player && state[c] === player
+        );
+    });
 }
 
 // Check if there is a winner

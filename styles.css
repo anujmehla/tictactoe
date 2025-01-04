@@ -1,34 +1,44 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
     margin: 20px 0;
+    font-size: 2rem;
 }
 
 .game-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px;
 }
 
+/* Board Styles */
 #board {
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
+    grid-template-columns: repeat(3, 1fr);
     gap: 5px;
+    max-width: 300px;
+    width: 90%; /* Makes the board responsive */
 }
 
 .cell {
-    width: 100px;
-    height: 100px;
+    width: 100%; /* Dynamically adjusts width */
+    aspect-ratio: 1; /* Ensures square cells */
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #ffffff;
     border: 1px solid #000;
     font-size: 2rem;
+    font-weight: bold;
     cursor: pointer;
 }
 
@@ -36,6 +46,7 @@ h1 {
     cursor: not-allowed;
 }
 
+/* Status and Button */
 #status {
     font-size: 1.2rem;
     margin: 20px 0;
@@ -45,4 +56,56 @@ h1 {
     padding: 10px 20px;
     font-size: 1rem;
     cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#restart:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    #board {
+        max-width: 90%; /* Reduce size on smaller screens */
+    }
+
+    .cell {
+        font-size: 1.5rem; /* Adjust font size for better fit */
+    }
+
+    #status {
+        font-size: 1rem;
+    }
+
+    #restart {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .cell {
+        font-size: 1.2rem; /* Further adjust font size */
+    }
+
+    #status {
+        font-size: 0.9rem;
+    }
+
+    #restart {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
 }
